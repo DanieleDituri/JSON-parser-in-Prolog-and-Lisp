@@ -174,7 +174,7 @@ parsenumberel2([X | Xs], [X | Ys], Other) :-
     between(48, 57, X),
     parsenumberel2(Xs, Ys, Other).
 parsenumberel2(Xs, [], Xs).
-   
+
 % Cancella i \n in tutta la lista
 delnl([],[]).
 delnl([10 | Xs], Ys) :-
