@@ -334,5 +334,78 @@
     )
 )
 
+; jsonaccess, legge l'attribute richiesto e restituisce il suo value
+; questa verrà letta una sola volta searchvalue sarà ricorsiva, credo sia meglio così
+; OPTIONAL si usa nel caso di parametri falcoltativi 
+; REST nel caso ci siano più di una variabile, magari non sappiamo quante variali optionali ci siano
+; ASSOC risponde a una query; gli serve una lista in ingresso e il quesioto (non credo possiamo usarlo)
+; LENGTH da il numero di lunghezza (non so come spiegarlo se non esempio: (lunghezza "abc") => 3)
+(defun jsonaccess (jsonobj &optional field &rest morefield)
+    (cond 
+        ((null field) jsonobj)
+        ((equal (first jsonobj) 'JSONOBJ)
+            (cond
+                ((and (null morefield) (stringp field))
+                    (searchvalue (rest jsonobj) field)
+                )
+                ((and (null morefield) (listp field))
+                    (searchvalue (rest jsonobj) (first field))
+                )
+                ((not (null morefield))
+
+                )
+            )
+        )
+        ((and (equal (first jsonobj) 'JSONARRAY) (null morefield))
+            
+        )
+
+        
+        (t (error "Errore (jsonaccess)")) 
+        
+    )
+)
+
+(defun searchvalue (jsonobj field)
+    (cond
+        ((null jsonobj) (error "Field cercato non presente"))
+        ((equal (first (first jsonobj)) field)
+            (second (first jsonobj))
+        )
+        (t (searchvalue (rest jsonobj) field))
+    )
+)
+
+; jsonread apre un file in lettura
+; legge i char e li trasforma in unica stringa
+; fa il jsonparse
+(defun jsonread (FileName)
+    (with-open-file
+        (In FileName 
+            :if-does-not-exist :error
+		    :direction :input)
+        (jsonparse (Intostring In))
+    )
+)
+
+; trasforma in un' unica stringa i char letti dal file
+(defun Intostring (file)
+    (let ((jsonstring (read-char file nil 'eof)))
+        (if (eq jsonstring 'eof) 
+            ""
+            (string-append jsonstring (Intostring file))
+        )
+    )
+)
 
 
+
+; jsondumb, jsonlist parsata quindi jsonobj a 
+; scrive una stringa JSON su un file
+(defun jsondumb ()
+    (cond
+        ; caso di JSONOBJ mette { ma coma fa a sapere quando finire avendo liste nelle liste
+        ; caso di JSONARRAY 
+    )
+
+)
