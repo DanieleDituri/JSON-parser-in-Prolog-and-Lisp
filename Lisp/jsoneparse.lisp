@@ -343,26 +343,37 @@
 (defun jsonaccess (jsonobj &optional field &rest morefield)
     (cond 
         ((null field) jsonobj)
-        ((equal (first jsonobj) 'JSONOBJ)
+        ((null morefield)
             (cond
-                ((and (null morefield) (stringp field))
-                    (searchvalue (rest jsonobj) field)
+                ((equal (first jsonobj) 'JSONOBJ)
+                    (cond
+                        ((listp field)
+                            (jsonaccess jsonobj (first field))
+                        )
+                        ((stringp field)
+                            (searchvalue (rest jsonobj) field)
+                        )
+                    )
                 )
-                ((and (null morefield) (listp field))
-                    (searchvalue (rest jsonobj) (first field))
-                )
-                ((not (null morefield))
-
+                ((equal (first jsonobj) 'JSONARRAY)
+                    (cond
+                        ((listp field)
+                            (jsonaccess jsonobj (first field))
+                        )
+                        ((numberp field)
+                            (searcharray (rest jsonobj) field)
+                        )
+                    )
                 )
             )
         )
-        ((and (equal (first jsonobj) 'JSONARRAY) (null morefield))
-            
+        ((not (null morefield))
+            (let ((json (searchvalue (rest jsonobj) Field)))
+                (jsonaccess json (first morefield) (rest morefield))
+            )
+                    
         )
-
-        
-        (t (error "Errore (jsonaccess)")) 
-        
+        (t (error "Errore (jsonaccess)"))
     )
 )
 
@@ -373,6 +384,18 @@
             (second (first jsonobj))
         )
         (t (searchvalue (rest jsonobj) field))
+    )
+)
+
+(defun searcharray (jsonobj field)
+    (cond
+        ((null jsonobj) (error "Field cercato non presente"))
+        ((not (equal field 0))
+            (searcharray (rest jsonobj) (- field 1))
+        )
+        ((equal field 0)
+            (first jsonobj)
+        )
     )
 )
 
