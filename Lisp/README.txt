@@ -1,5 +1,4 @@
 873401 Dituri Daniele
-856524 Gria Spinelli Federico
 
 jsonparse(JSON)
 jsonparse ha in ingresso una stringa scritta in JSON e in uscita una lista (JSONOBJ ("Attribute" "Value") ...).
