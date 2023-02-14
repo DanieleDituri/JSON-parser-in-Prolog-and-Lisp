@@ -1,7 +1,3 @@
-873401 Dituri Daniele
-856524 Gria Spinelli Federico
-
-
 jsonparse(JSONString, Object)
 jsonparse ha in ingresso una stringa scritta in JSON e in uscita ha un oggetto chiamato jsonobj().
 Abbiamo deciso di trasformare la stringa in una lista di caratteri ASCII tramite l'uso di string_codes/2.
